@@ -284,22 +284,43 @@
 
     function jsonp(params) {
       return new Promise((resolve, reject) => {
-        const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+        const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000000);
+        const script = document.createElement('script');
 
         params.callback = callbackName;
+        params._ = Date.now();
+
+        let done = false;
+
+        const timer = setTimeout(() => {
+          if (done) return;
+          done = true;
+          cleanup();
+          reject(new Error('timeout'));
+        }, 15000);
+
+        function cleanup() {
+          clearTimeout(timer);
+          try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+          if (script && script.parentNode) {
+            script.parentNode.removeChild(script);
+          }
+        }
 
         window[callbackName] = function(data) {
-          delete window[callbackName];
-          script.remove();
-          resolve(data);
+          if (done) return;
+          done = true;
+          cleanup();
+          resolve(data || {});
         };
 
-        const script = document.createElement('script');
         script.src = API_URL + '?' + new URLSearchParams(params).toString();
+        script.async = true;
 
         script.onerror = function() {
-          delete window[callbackName];
-          script.remove();
+          if (done) return;
+          done = true;
+          cleanup();
           reject(new Error('JSONP failed'));
         };
 
@@ -323,15 +344,18 @@
     });
 
     async function loadClaimInfo(claim) {
+      $('screenName').textContent = '...';
+      $('btn').disabled = true;
+
       try {
         const data = await jsonp({
           action: 'claim-info',
           claim: claim
         });
 
-        if (!data.ok) {
+        if (!data || !data.ok) {
           $('screenName').textContent = '-';
-          $('result').innerHTML = renderError(data.message || 'ลิงก์ไม่พร้อมใช้งาน');
+          $('result').innerHTML = renderError((data && data.message) || 'ลิงก์ไม่พร้อมใช้งาน');
           $('btn').disabled = true;
           return;
         }
@@ -341,7 +365,7 @@
 
       } catch (err) {
         $('screenName').textContent = '-';
-        $('result').innerHTML = renderError('โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่');
+        $('result').innerHTML = renderError('โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่ หรือติดต่อแอดมิน');
         $('btn').disabled = true;
       }
     }
@@ -369,7 +393,7 @@
           device: device
         });
 
-        if (data.ok && data.otp) {
+        if (data && data.ok && data.otp) {
           $('result').innerHTML = renderSuccess(data.otp, data.screen);
           $('screenName').textContent = data.screen || $('screenName').textContent || '-';
           btn.textContent = 'รับรหัสแล้ว';
@@ -378,9 +402,9 @@
           return;
         }
 
-        $('result').innerHTML = renderError(data.message || 'ไม่พบรหัส OTP');
+        $('result').innerHTML = renderError((data && data.message) || 'ไม่พบรหัส OTP');
 
-        if (data.status === 'CLAIM_NOT_ACTIVE' || data.status === 'SCREEN_ALREADY_USED') {
+        if (data && (data.status === 'CLAIM_NOT_ACTIVE' || data.status === 'SCREEN_ALREADY_USED')) {
           btn.textContent = 'ลิงก์ใช้ไม่ได้แล้ว';
           btn.disabled = true;
           $('device').disabled = true;
