@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>รับรหัสยืนยัน</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --bg-soft: #eef4fb;
+      --card: #ffffff;
+      --text: #101828;
+      --muted: #667085;
+      --muted-2: #98a2b3;
+      --line: #e4e7ec;
+
+      --primary: #0b2f66;
+      --primary-dark: #082653;
+      --primary-soft: #eef5ff;
+      --primary-line: #d6e8ff;
+
+      --success-bg: #ecfdf3;
+      --success-text: #067647;
+      --success-line: #abefc6;
+
+      --error-bg: #fef3f2;
+      --error-text: #b42318;
+      --error-line: #fecdca;
+
+      --shadow: 0 24px 70px rgba(16, 24, 40, 0.10);
+      --radius: 26px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans Thai",
+        Arial,
+        sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(11, 47, 102, 0.10), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .brand {
+      text-align: center;
+      margin-bottom: 18px;
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      color: var(--primary);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(228, 231, 236, 0.95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 30px 22px 24px;
+    }
+
+    .topline {
+      width: 44px;
+      height: 4px;
+      border-radius: 999px;
+      background: var(--primary);
+      margin: 0 auto 20px;
+    }
+
+    h1 {
+      margin: 0;
+      text-align: center;
+      font-size: 27px;
+      line-height: 1.25;
+      letter-spacing: -0.04em;
+      color: var(--text);
+    }
+
+    .subtitle {
+      margin: 9px 0 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .screen-card {
+      background: linear-gradient(180deg, #f8fbff 0%, var(--primary-soft) 100%);
+      border: 1px solid var(--primary-line);
+      border-radius: 22px;
+      padding: 22px 18px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .screen-label {
+      font-size: 13px;
+      font-weight: 850;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .screen-name {
+      font-size: 48px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: -0.06em;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .screen-note {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid var(--primary-line);
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 850;
+      color: #344054;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      height: 54px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: #ffffff;
+      color: var(--text);
+      padding: 0 15px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input::placeholder {
+      color: var(--muted-2);
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(11, 47, 102, 0.10);
+    }
+
+    input:disabled {
+      background: #f9fafb;
+      color: var(--muted-2);
+    }
+
+    .hint {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    button {
+      width: 100%;
+      height: 54px;
+      margin-top: 18px;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .result {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 17px;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid var(--success-line);
+    }
+
+    .error {
+      background: var(--error-bg);
+      color: var(--error-text);
+      border: 1px solid var(--error-line);
+    }
+
+    .otp-title {
+      font-size: 13px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .otp {
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 950;
+      letter-spacing: 0.18em;
+      color: #064e3b;
+      margin: 10px 0 12px;
+    }
+
+    .footer {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    .loading {
+      opacity: 0.7;
+    }
+
+    @media (max-width: 420px) {
+      body {
+        align-items: flex-start;
+        padding-top: 28px;
+      }
+
+      .card {
+        padding: 26px 18px 22px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .screen-name {
+        font-size: 43px;
+      }
+
+      .otp {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div class="brand">426 SHOP</div>
+
+    <section class="card">
+      <div class="topline"></div>
+
+      <h1>รับรหัสยืนยัน</h1>
+
+      <p class="subtitle">
+        กรอกอุปกรณ์ที่ใช้งาน แล้วกดรับรหัส OTP
+      </p>
+
+      <input id="claim" type="hidden" />
+
+      <div class="screen-card">
+        <div class="screen-label">คุณสามารถใช้งานได้ที่</div>
+        <div class="screen-name" id="screenName">...</div>
+        <div class="screen-note">ใช้รหัสกับจอนี้เท่านั้น</div>
+      </div>
+
+      <label for="device">อุปกรณ์ที่ใช้งาน</label>
+      <input
+        id="device"
+        type="text"
+        placeholder="เช่น iPhone, Samsung, iPad"
+        autocomplete="off"
+      />
+
+      <div class="hint">
+        ระบุอุปกรณ์ให้ตรงกับเครื่องที่ใช้งานจริง
+      </div>
+
+      <button id="btn" onclick="getOtp()" disabled>
+        รับรหัส OTP
+      </button>
+
+      <div id="result"></div>
+
+      <div class="footer">
+        ลิงก์นี้ใช้รับรหัสสำเร็จได้ 1 ครั้งเท่านั้น
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwGJL93e_9kuv-Ai6cwL4MfVKImFpQXXuUS3Ye1lYI4TCvOblNW0jKZIb5HcxdnYAhemw/exec';
+
+    const $ = (id) => document.getElementById(id);
+
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name) || '';
+    }
+
+    window.addEventListener('DOMContentLoaded', async function () {
+      const claim = getQueryParam('claim').trim().toUpperCase();
+
+      $('claim').value = claim;
+
+      if (!claim) {
+        $('screenName').textContent = '-';
+        $('result').innerHTML = renderError('ลิงก์ไม่ถูกต้อง กรุณาขอลิงก์ใหม่จากแอดมิน');
+        $('btn').disabled = true;
+        return;
+      }
+
+      await loadClaimInfo(claim);
+    });
+
+    async function loadClaimInfo(claim) {
+      try {
+        const params = new URLSearchParams({
+          action: 'claim-info',
+          claim: claim
+        });
+
+        const res = await fetch(API_URL + '?' + params.toString());
+        const data = await res.json();
+
+        if (!data.ok) {
+          $('screenName').textContent = '-';
+          $('result').innerHTML = renderError(data.message || 'ลิงก์ไม่พร้อมใช้งาน');
+          $('btn').disabled = true;
+          return;
+        }
+
+        $('screenName').textContent = data.screen || '-';
+        $('btn').disabled = false;
+
+      } catch (err) {
+        $('screenName').textContent = '-';
+        $('result').innerHTML = renderError('โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่');
+        $('btn').disabled = true;
+      }
+    }
+
+    async function getOtp() {
+      const claim = $('claim').value.trim().toUpperCase();
+      const device = $('device').value.trim();
+      const btn = $('btn');
+
+      $('result').innerHTML = '';
+
+      if (!device) {
+        $('result').innerHTML = renderError('กรุณากรอกอุปกรณ์ที่ใช้งาน');
+        $('device').focus();
+        return;
+      }
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.textContent = 'กำลังค้นหารหัส...';
+
+      try {
+        const params = new URLSearchParams({
+          action: 'otp',
+          claim: claim,
+          device: device
+        });
+
+        const res = await fetch(API_URL + '?' + params.toString());
+        const data = await res.json();
+
+        if (data.ok && data.otp) {
+          $('result').innerHTML = renderSuccess(data.otp, data.screen);
+          $('screenName').textContent = data.screen || $('screenName').textContent || '-';
+          btn.classList.remove('loading');
+          btn.textContent = 'รับรหัสแล้ว';
+          btn.disabled = true;
+          $('device').disabled = true;
+          return;
+        }
+
+        $('result').innerHTML = renderError(data.message || 'ไม่พบรหัส OTP');
+
+        if (
+          data.status === 'CLAIM_NOT_ACTIVE' ||
+          data.status === 'SCREEN_ALREADY_USED'
+        ) {
+          btn.classList.remove('loading');
+          btn.textContent = 'ลิงก์ใช้ไม่ได้แล้ว';
+          btn.disabled = true;
+          $('device').disabled = true;
+          return;
+        }
+
+        btn.classList.remove('loading');
+        btn.textContent = 'รับรหัส OTP';
+        btn.disabled = false;
+
+      } catch (err) {
+        $('result').innerHTML = renderError('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่');
+        btn.classList.remove('loading');
+        btn.textContent = 'รับรหัส OTP';
+        btn.disabled = false;
+      }
+    }
+
+    function renderSuccess(otp, screenFromApi) {
+      const screen = screenFromApi || $('screenName').textContent || '';
+
+      return `
+        <div class="result success">
+          <div class="otp-title">รหัส OTP สำหรับ ${escapeHtml(screen)}</div>
+          <div class="otp">${escapeHtml(otp)}</div>
+          <div>กรุณานำรหัสนี้ไปใช้กับ ${escapeHtml(screen)} เท่านั้น</div>
+        </div>
+      `;
+    }
+
+    function renderError(message) {
+      return `
+        <div class="result error">
+          ${escapeHtml(message || 'เกิดข้อผิดพลาด')}
+        </div>
+      `;
+    }
+
+    function escapeHtml(text) {
+      return String(text || '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+  </script>
+</body>
+</html>
