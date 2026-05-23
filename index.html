@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <title>รับรหัสยืนยัน</title>
+  <title>รับรหัสยืนยัน | 426 SHOP</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -22,6 +22,9 @@
       --error-bg: #fef3f2;
       --error-text: #b42318;
       --error-line: #fecdca;
+      --warning-bg: #fffaeb;
+      --warning-text: #b54708;
+      --warning-line: #fedf89;
       --shadow: 0 24px 70px rgba(16,24,40,0.10);
     }
 
@@ -191,6 +194,7 @@
       text-align: center;
       font-size: 14px;
       line-height: 1.6;
+      word-break: break-word;
     }
 
     .success {
@@ -203,6 +207,12 @@
       background: var(--error-bg);
       color: var(--error-text);
       border: 1px solid var(--error-line);
+    }
+
+    .warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border: 1px solid var(--warning-line);
     }
 
     .otp-title {
@@ -296,17 +306,13 @@
   </main>
 
   <script>
-    /*
-     * API URL ของ Apps Script Web App
-     * ถ้า Deploy ใหม่ ต้องเอา URL ใหม่มาแทนบรรทัดนี้
-     */
     const API_URL = 'https://script.google.com/macros/s/AKfycbyZVl0aiLGK0K2qnKNPXrtrN1jskktWMRQizVKA4X4sMZcjY1rfbEM1CH41olrmw5AMAQ/exec';
 
     const $ = (id) => document.getElementById(id);
 
     function getQueryParam(name) {
       const params = new URLSearchParams(window.location.search);
-      return params.get(name) || '';
+      return (params.get(name) || '').trim();
     }
 
     function jsonp(params) {
@@ -324,10 +330,11 @@
           done = true;
           cleanup();
           reject(new Error('timeout'));
-        }, 15000);
+        }, 20000);
 
         function cleanup() {
           clearTimeout(timer);
+
           try {
             delete window[callbackName];
           } catch (e) {
@@ -361,13 +368,15 @@
     }
 
     window.addEventListener('DOMContentLoaded', async function () {
-      const claim = getQueryParam('claim').trim().toUpperCase();
+      const claim = getQueryParam('claim').toUpperCase();
 
       $('claim').value = claim;
 
       if (!claim) {
         $('screenName').textContent = '-';
-        $('result').innerHTML = renderError('ลิงก์ไม่ถูกต้อง กรุณาขอลิงก์ใหม่จากแอดมิน');
+        $('result').innerHTML = renderWarning(
+          'ลิงก์นี้ยังไม่มีรหัส claim<br>กรุณาเปิดลิงก์ที่แอดมินส่งให้เท่านั้น'
+        );
         $('btn').disabled = true;
         return;
       }
@@ -378,6 +387,7 @@
     async function loadClaimInfo(claim) {
       $('screenName').textContent = '...';
       $('btn').disabled = true;
+      $('result').innerHTML = '';
 
       try {
         const data = await jsonp({
@@ -397,7 +407,9 @@
 
       } catch (err) {
         $('screenName').textContent = '-';
-        $('result').innerHTML = renderError('โหลดข้อมูลไม่สำเร็จ กรุณาลองใหม่ หรือติดต่อแอดมิน');
+        $('result').innerHTML = renderError(
+          'โหลดข้อมูลไม่สำเร็จ<br>กรุณาติดต่อแอดมิน'
+        );
         $('btn').disabled = true;
       }
     }
@@ -408,6 +420,11 @@
       const btn = $('btn');
 
       $('result').innerHTML = '';
+
+      if (!claim) {
+        $('result').innerHTML = renderError('ลิงก์ไม่ถูกต้อง กรุณาขอลิงก์ใหม่จากแอดมิน');
+        return;
+      }
 
       if (!device) {
         $('result').innerHTML = renderError('กรุณากรอกอุปกรณ์ที่ใช้งาน');
@@ -468,18 +485,26 @@
     function renderError(message) {
       return `
         <div class="result error">
-          ${escapeHtml(message || 'เกิดข้อผิดพลาด')}
+          ${message || 'เกิดข้อผิดพลาด'}
+        </div>
+      `;
+    }
+
+    function renderWarning(message) {
+      return `
+        <div class="result warning">
+          ${message || 'กรุณาตรวจสอบลิงก์'}
         </div>
       `;
     }
 
     function escapeHtml(text) {
       return String(text || '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
   </script>
 </body>
