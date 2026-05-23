@@ -11,47 +11,30 @@
       --card: #ffffff;
       --text: #101828;
       --muted: #667085;
-      --muted-2: #98a2b3;
       --line: #e4e7ec;
-
       --primary: #0b2f66;
       --primary-dark: #082653;
       --primary-soft: #eef5ff;
       --primary-line: #d6e8ff;
-
       --success-bg: #ecfdf3;
       --success-text: #067647;
       --success-line: #abefc6;
-
       --error-bg: #fef3f2;
       --error-text: #b42318;
       --error-line: #fecdca;
-
-      --shadow: 0 24px 70px rgba(16, 24, 40, 0.10);
-      --radius: 26px;
-      --radius-md: 16px;
+      --shadow: 0 24px 70px rgba(16,24,40,0.10);
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html {
-      -webkit-text-size-adjust: 100%;
-    }
-
     body {
       margin: 0;
       min-height: 100vh;
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Noto Sans Thai",
-        Arial,
-        sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans Thai", Arial, sans-serif;
       background:
-        radial-gradient(circle at top, rgba(11, 47, 102, 0.10), transparent 34%),
+        radial-gradient(circle at top, rgba(11,47,102,0.10), transparent 34%),
         linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
       color: var(--text);
       display: flex;
@@ -76,8 +59,8 @@
 
     .card {
       background: var(--card);
-      border: 1px solid rgba(228, 231, 236, 0.95);
-      border-radius: var(--radius);
+      border: 1px solid rgba(228,231,236,0.95);
+      border-radius: 26px;
       box-shadow: var(--shadow);
       padding: 30px 22px 24px;
     }
@@ -96,7 +79,6 @@
       font-size: 27px;
       line-height: 1.25;
       letter-spacing: -0.04em;
-      color: var(--text);
     }
 
     .subtitle {
@@ -134,8 +116,6 @@
 
     .screen-note {
       display: inline-flex;
-      align-items: center;
-      justify-content: center;
       padding: 7px 12px;
       border-radius: 999px;
       background: #ffffff;
@@ -157,27 +137,22 @@
       width: 100%;
       height: 54px;
       border: 1px solid var(--line);
-      border-radius: var(--radius-md);
+      border-radius: 16px;
       background: #ffffff;
       color: var(--text);
       padding: 0 15px;
       font-size: 16px;
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    input::placeholder {
-      color: var(--muted-2);
     }
 
     input:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(11, 47, 102, 0.10);
+      box-shadow: 0 0 0 4px rgba(11,47,102,0.10);
     }
 
     input:disabled {
       background: #f9fafb;
-      color: var(--muted-2);
+      color: #98a2b3;
     }
 
     .hint {
@@ -192,22 +167,16 @@
       height: 54px;
       margin-top: 18px;
       border: none;
-      border-radius: var(--radius-md);
+      border-radius: 16px;
       background: var(--primary);
       color: #ffffff;
       font-size: 15px;
       font-weight: 900;
       cursor: pointer;
-      transition: background 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
     }
 
     button:hover:not(:disabled) {
       background: var(--primary-dark);
-      transform: translateY(-1px);
-    }
-
-    button:active:not(:disabled) {
-      transform: translateY(0);
     }
 
     button:disabled {
@@ -260,33 +229,6 @@
       line-height: 1.5;
       text-align: center;
     }
-
-    .loading {
-      opacity: 0.7;
-    }
-
-    @media (max-width: 420px) {
-      body {
-        align-items: flex-start;
-        padding-top: 28px;
-      }
-
-      .card {
-        padding: 26px 18px 22px;
-      }
-
-      h1 {
-        font-size: 24px;
-      }
-
-      .screen-name {
-        font-size: 43px;
-      }
-
-      .otp {
-        font-size: 36px;
-      }
-    }
   </style>
 </head>
 
@@ -312,12 +254,7 @@
       </div>
 
       <label for="device">อุปกรณ์ที่ใช้งาน</label>
-      <input
-        id="device"
-        type="text"
-        placeholder="เช่น iPhone, Samsung, iPad"
-        autocomplete="off"
-      />
+      <input id="device" type="text" placeholder="เช่น iPhone, Samsung, iPad" autocomplete="off" />
 
       <div class="hint">
         ระบุอุปกรณ์ให้ตรงกับเครื่องที่ใช้งานจริง
@@ -336,19 +273,38 @@
   </main>
 
   <script>
-    /*
-     * สำคัญ:
-     * แก้ตรงนี้เป็น Web App URL ของ Apps Script
-     * ตัวอย่าง:
-     * const API_URL = 'https://script.google.com/macros/s/AKfycbxxmODougeDylVsAYD8oyN6e90SD3sxBtBZvjOrwqu0RX-zbnqj4aHohFFDv9SrWoyf/exec';
-     */
-    const API_URL = 'https://script.google.com/macros/s/DEPLOY_ID/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyO_YxZP5jiGCyAD8gmGj7t5ygzLsR4wS9SFZpd7CWh2fl6ufB2kHGvMGEFsx2aQiPPWQ/exec';
 
     const $ = (id) => document.getElementById(id);
 
     function getQueryParam(name) {
       const params = new URLSearchParams(window.location.search);
       return params.get(name) || '';
+    }
+
+    function jsonp(params) {
+      return new Promise((resolve, reject) => {
+        const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+
+        params.callback = callbackName;
+
+        window[callbackName] = function(data) {
+          delete window[callbackName];
+          script.remove();
+          resolve(data);
+        };
+
+        const script = document.createElement('script');
+        script.src = API_URL + '?' + new URLSearchParams(params).toString();
+
+        script.onerror = function() {
+          delete window[callbackName];
+          script.remove();
+          reject(new Error('JSONP failed'));
+        };
+
+        document.body.appendChild(script);
+      });
     }
 
     window.addEventListener('DOMContentLoaded', async function () {
@@ -368,13 +324,10 @@
 
     async function loadClaimInfo(claim) {
       try {
-        const params = new URLSearchParams({
+        const data = await jsonp({
           action: 'claim-info',
           claim: claim
         });
-
-        const res = await fetch(API_URL + '?' + params.toString());
-        const data = await res.json();
 
         if (!data.ok) {
           $('screenName').textContent = '-';
@@ -407,24 +360,18 @@
       }
 
       btn.disabled = true;
-      btn.classList.add('loading');
       btn.textContent = 'กำลังค้นหารหัส...';
 
       try {
-        const params = new URLSearchParams({
+        const data = await jsonp({
           action: 'otp',
           claim: claim,
           device: device
         });
 
-        const res = await fetch(API_URL + '?' + params.toString());
-        const data = await res.json();
-
         if (data.ok && data.otp) {
           $('result').innerHTML = renderSuccess(data.otp, data.screen);
           $('screenName').textContent = data.screen || $('screenName').textContent || '-';
-
-          btn.classList.remove('loading');
           btn.textContent = 'รับรหัสแล้ว';
           btn.disabled = true;
           $('device').disabled = true;
@@ -433,24 +380,18 @@
 
         $('result').innerHTML = renderError(data.message || 'ไม่พบรหัส OTP');
 
-        if (
-          data.status === 'CLAIM_NOT_ACTIVE' ||
-          data.status === 'SCREEN_ALREADY_USED'
-        ) {
-          btn.classList.remove('loading');
+        if (data.status === 'CLAIM_NOT_ACTIVE' || data.status === 'SCREEN_ALREADY_USED') {
           btn.textContent = 'ลิงก์ใช้ไม่ได้แล้ว';
           btn.disabled = true;
           $('device').disabled = true;
           return;
         }
 
-        btn.classList.remove('loading');
         btn.textContent = 'รับรหัส OTP';
         btn.disabled = false;
 
       } catch (err) {
         $('result').innerHTML = renderError('เชื่อมต่อระบบไม่สำเร็จ กรุณาลองใหม่');
-        btn.classList.remove('loading');
         btn.textContent = 'รับรหัส OTP';
         btn.disabled = false;
       }
