@@ -229,6 +229,29 @@
       line-height: 1.5;
       text-align: center;
     }
+
+    @media (max-width: 420px) {
+      body {
+        align-items: flex-start;
+        padding-top: 28px;
+      }
+
+      .card {
+        padding: 26px 18px 22px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .screen-name {
+        font-size: 43px;
+      }
+
+      .otp {
+        font-size: 36px;
+      }
+    }
   </style>
 </head>
 
@@ -273,7 +296,11 @@
   </main>
 
   <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyiVsfSbcdfDE3ajFhtswrqTpSBD22iKwZ1kXYf4TzvgwFD91Q14OeUMk48Q4C_d_p3hA/exec';
+    /*
+     * API URL ของ Apps Script Web App
+     * ถ้า Deploy ใหม่ ต้องเอา URL ใหม่มาแทนบรรทัดนี้
+     */
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyZVl0aiLGK0K2qnKNPXrtrN1jskktWMRQizVKA4X4sMZcjY1rfbEM1CH41olrmw5AMAQ/exec';
 
     const $ = (id) => document.getElementById(id);
 
@@ -301,7 +328,12 @@
 
         function cleanup() {
           clearTimeout(timer);
-          try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+          try {
+            delete window[callbackName];
+          } catch (e) {
+            window[callbackName] = undefined;
+          }
+
           if (script && script.parentNode) {
             script.parentNode.removeChild(script);
           }
